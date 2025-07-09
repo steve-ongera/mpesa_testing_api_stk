@@ -1,0 +1,18 @@
+<!-- templates/base.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Ecommerce</title>
+</head>
+<body>
+    <!-- Display Django messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

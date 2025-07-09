@@ -1,0 +1,39 @@
+<!-- templates/checkout.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Checkout</h1>
+
+<h2>Product Details</h2>
+<p>Product: {{ product.name }}</p>
+<p>Price: KSH {{ product.price }}</p>
+<p>Description: {{ product.description }}</p>
+
+<h2>Payment Details</h2>
+<form method="post">
+    {% csrf_token %}
+    
+    <label>Phone Number (format: 0712345678):</label>
+    <input type="text" name="phone_number" required placeholder="0712345678">
+    <br><br>
+    
+    <label>Quantity:</label>
+    <input type="number" name="quantity" value="1" min="1" required>
+    <br><br>
+    
+    <p>Total: KSH <span id="total">{{ product.price }}</span></p>
+    
+    <button type="submit">Pay with M-Pesa</button>
+</form>
+
+<script>
+    // Simple JavaScript to calculate total
+    document.querySelector('input[name="quantity"]').addEventListener('input', function() {
+        const quantity = this.value;
+        const price = {{ product.price }};
+        const total = quantity * price;
+        document.getElementById('total').textContent = total.toFixed(2);
+    });
+</script>
+
+{% endblock %}
