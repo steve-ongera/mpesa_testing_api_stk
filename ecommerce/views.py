@@ -6,6 +6,56 @@ from django.contrib import messages
 from .models import Product, Order, MpesaTransaction
 from .mpesa_utils import MpesaAPI
 import json
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, authenticate , logout
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib import messages
+from django.contrib.auth.models import User
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have been logged out successfully.")
+    return redirect('product_list')
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                messages.success(request, f"Welcome back, {username}!")
+                return redirect('product_list')
+            else:
+                messages.error(request, "Invalid username or password.")
+        else:
+            messages.error(request, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'auth/login.html', {'form': form})
+
+def signup_view(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+
+        # Basic validation
+        if not username or not password or not password2:
+            messages.error(request, "All fields are required.")
+        elif password != password2:
+            messages.error(request, "Passwords do not match.")
+        elif User.objects.filter(username=username).exists():
+            messages.error(request, "Username already taken.")
+        else:
+            user = User.objects.create_user(username=username, password=password)
+            login(request, user)
+            messages.success(request, "Account created successfully!")
+            return redirect('products')
+    
+    return render(request, 'auth/signup.html')
 
 def product_list(request):
     """Display all products"""

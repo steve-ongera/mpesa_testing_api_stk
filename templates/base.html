@@ -1,11 +1,91 @@
-<!-- templates/base.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Simple Ecommerce{% endblock %}</title>
-    <meta name="description" content="{% block description %}Professional ecommerce store with quality products{% endblock %}">
+    
+    <!-- SEO Meta Tags -->
+    <title>{% block title %}Ecomstores Kenya - Quality Products Online Shopping in Nairobi{% endblock %}</title>
+    <meta name="description" content="{% block description %}Shop quality products online in Kenya. Ecomstores Nairobi offers electronics, fashion, home goods with fast delivery across Kenya. Best prices guaranteed.{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}ecommerce Kenya, online shopping Nairobi, buy online Kenya, electronics Kenya, fashion Kenya, home goods Kenya, delivery Nairobi, shopping Kenya{% endblock %}">
+    <meta name="author" content="Ecomstores Kenya">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+    
+    <!-- Geo-targeting -->
+    <meta name="geo.region" content="KE-30">
+    <meta name="geo.placename" content="Nairobi">
+    <meta name="geo.position" content="-1.2921;36.8219">
+    <meta name="ICBM" content="-1.2921, 36.8219">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="{% block og_title %}Ecomstores Kenya - Quality Products Online Shopping{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Shop quality products online in Kenya. Fast delivery across Nairobi and Kenya. Best prices guaranteed.{% endblock %}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{% block og_url %}https://www.ecomstores.co.ke{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://www.ecomstores.co.ke/static/images/og-image.jpg{% endblock %}">
+    <meta property="og:site_name" content="Ecomstores Kenya">
+    <meta property="og:locale" content="en_KE">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}Ecomstores Kenya - Quality Products Online Shopping{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Shop quality products online in Kenya. Fast delivery across Nairobi and Kenya.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://www.ecomstores.co.ke/static/images/twitter-image.jpg{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'favicon/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'favicon/site.webmanifest' %}">
+    <link rel="mask-icon" href="{% static 'favicon/safari-pinned-tab.svg' %}" color="#5bbad5">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="theme-color" content="#ffffff">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical %}https://www.ecomstores.co.ke{% endblock %}">
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Store",
+        "name": "Ecomstores Kenya",
+        "description": "Quality products online shopping in Kenya",
+        "url": "https://www.ecomstores.co.ke",
+        "logo": "https://www.ecomstores.co.ke/static/images/logo.png",
+        "image": "https://www.ecomstores.co.ke/static/images/store-image.jpg",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Nairobi CBD",
+            "addressLocality": "Nairobi",
+            "addressRegion": "Nairobi County",
+            "postalCode": "00100",
+            "addressCountry": "KE"
+        },
+        "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": -1.2921,
+            "longitude": 36.8219
+        },
+        "telephone": "+254-700-000-000",
+        "openingHours": "Mo-Su 08:00-20:00",
+        "priceRange": "$$",
+        "acceptedPaymentMethod": [
+            "Cash",
+            "Credit Card",
+            "M-Pesa",
+            "Bank Transfer"
+        ],
+        "currenciesAccepted": "KES",
+        "areaServed": {
+            "@type": "Country",
+            "name": "Kenya"
+        }
+    }
+    </script>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -14,6 +94,12 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    
+    <!-- Preload important resources -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style">
+    <link rel="preload" href="{% static 'css/style.css' %}" as="style">
     <style>
         :root {
     --primary-blue: #2563eb;
@@ -378,10 +464,10 @@ body {
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <small><i class="fas fa-phone"></i> +1 234 567 8900 | <i class="fas fa-envelope"></i> support@ecommerce.com</small>
+                    <small><i class="fas fa-phone"></i> +254 734 567 8900 | <i class="fas fa-envelope"></i> support@ecommerce.com</small>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <small>Free shipping on orders over $50!</small>
+                    <small>Free shipping on orders over ksh5000!</small>
                 </div>
             </div>
         </div>
@@ -390,7 +476,7 @@ body {
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="fas fa-store"></i> EcomStore</a>
+            <a class="navbar-brand" href="{% url 'product_list'%}"><i class="fas fa-store"></i> EcomStore</a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -399,7 +485,7 @@ body {
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-home"></i> Home</a>
+                        <a class="nav-link" href="{% url 'product_list'%}"><i class="fas fa-home"></i> Home</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -431,10 +517,16 @@ body {
                 
                 <!-- User Actions -->
                 <div class="d-flex align-items-center">
-                    <a href="#" class="btn btn-outline-primary me-2">
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'logout'%}" class="btn btn-outline-primary me-2">
+                        <i class="fas fa-user"></i> Logout
+                    </a>
+                    {% else %}
+                    <a href="{% url 'login'%}" class="btn btn-outline-primary me-2">
                         <i class="fas fa-user"></i> Login
                     </a>
-                    <a href="#" class="btn btn-primary me-2">
+                    {% endif %}
+                    <a href="{% url 'signup'%}" class="btn btn-primary me-2">
                         <i class="fas fa-user-plus"></i> Sign Up
                     </a>
                     <a href="#" class="cart-icon">

@@ -1,0 +1,168 @@
+{% extends 'base.html' %}
+
+{% block title %}EcomStore - Sign Up{% endblock %}
+
+{% block content %}
+<style>
+    .auth-section {
+        padding: 80px 0;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    }
+    
+    .auth-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        padding: 40px;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
+    .auth-title {
+        font-size: 2.2rem;
+        color: var(--gray-dark);
+        margin-bottom: 10px;
+        font-weight: 700;
+        text-align: center;
+    }
+    
+    .auth-subtitle {
+        color: var(--gray-medium);
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .auth-form .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .auth-form label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--gray-dark);
+        font-weight: 500;
+    }
+    
+    .auth-form input {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .auth-form input:focus {
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        outline: none;
+    }
+    
+    .auth-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+        color: white;
+        padding: 14px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 1rem;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 10px;
+    }
+    
+    .auth-btn:hover {
+        background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 20px;
+        color: var(--gray-medium);
+    }
+    
+    .auth-link {
+        color: var(--primary-blue);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    
+    .auth-link:hover {
+        text-decoration: underline;
+    }
+    
+    .error-message {
+        color: #ef4444;
+        font-size: 0.9rem;
+        margin-top: 5px;
+    }
+</style>
+
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h1 class="auth-title">Create Account</h1>
+            <p class="auth-subtitle">Join us to start shopping</p>
+            
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                    <div class="error-message">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+                
+                <div class="form-group">
+                    <label for="id_username">Username</label>
+                    <input type="text" name="username" id="id_username" required>
+                    {% if form.username.errors %}
+                        <div class="error-message">
+                            {{ form.username.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_email">Email</label>
+                    <input type="email" name="email" id="id_email" required>
+                    {% if form.email.errors %}
+                        <div class="error-message">
+                            {{ form.email.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password1">Password</label>
+                    <input type="password" name="password1" id="id_password1" required>
+                    {% if form.password1.errors %}
+                        <div class="error-message">
+                            {{ form.password1.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="id_password2">Confirm Password</label>
+                    <input type="password" name="password2" id="id_password2" required>
+                    {% if form.password2.errors %}
+                        <div class="error-message">
+                            {{ form.password2.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="auth-btn">Create Account</button>
+                
+                <div class="auth-footer">
+                    Already have an account? <a href="{% url 'login' %}" class="auth-link">Login</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
