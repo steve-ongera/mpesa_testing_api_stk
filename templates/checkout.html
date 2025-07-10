@@ -1,39 +1,663 @@
 <!-- templates/checkout.html -->
 {% extends 'base.html' %}
 
+{% block title %}Checkout - {{ product.name }}{% endblock %}
+
 {% block content %}
-<h1>Checkout</h1>
+<style>
+    /* Checkout Container */
+    .checkout-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+    }
+    
+    /* Breadcrumb */
+    .breadcrumb-nav {
+        background-color: var(--gray-light);
+        padding: 15px 0;
+        margin-bottom: 40px;
+    }
+    
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+    
+    .breadcrumb-item a {
+        color: var(--primary-blue);
+        text-decoration: none;
+    }
+    
+    .breadcrumb-item.active {
+        color: var(--gray-medium);
+    }
+    
+    /* Page Header */
+    .page-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    
+    .page-title {
+        font-size: 2.5rem;
+        color: var(--gray-dark);
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    
+    .page-subtitle {
+        color: var(--gray-medium);
+        font-size: 1.1rem;
+    }
+    
+    /* Checkout Steps */
+    .checkout-steps {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 50px;
+        padding: 0 20px;
+    }
+    
+    .step {
+        display: flex;
+        align-items: center;
+        color: var(--gray-medium);
+        font-weight: 500;
+        position: relative;
+    }
+    
+    .step.active {
+        color: var(--primary-blue);
+    }
+    
+    .step-number {
+        background-color: var(--gray-light);
+        color: var(--gray-medium);
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        margin-right: 10px;
+        transition: all 0.3s ease;
+    }
+    
+    .step.active .step-number {
+        background-color: var(--primary-blue);
+        color: white;
+    }
+    
+    .step:not(:last-child)::after {
+        content: '';
+        width: 60px;
+        height: 2px;
+        background-color: var(--gray-light);
+        margin: 0 20px;
+    }
+    
+    /* Main Checkout Layout */
+    .checkout-layout {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 50px;
+        align-items: start;
+    }
+    
+    /* Product Details Card */
+    .product-card {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        padding: 30px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .product-details {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 30px;
+        align-items: start;
+    }
+    
+    .product-image-container {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        background: var(--gray-light);
+    }
+    
+    .product-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+    
+    .product-placeholder {
+        width: 100%;
+        height: 200px;
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #64748b;
+        font-size: 3rem;
+        border-radius: 10px;
+    }
+    
+    .product-info h2 {
+        color: var(--gray-dark);
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    
+    .product-price {
+        font-size: 1.5rem;
+        color: var(--primary-blue);
+        font-weight: 700;
+        margin-bottom: 15px;
+    }
+    
+    .product-description {
+        color: var(--gray-medium);
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    
+    .product-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    
+    .feature-badge {
+        background-color: var(--accent-blue);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+    
+    /* Payment Form */
+    .payment-form {
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        padding: 30px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .form-section {
+        margin-bottom: 30px;
+    }
+    
+    .form-section h3 {
+        color: var(--gray-dark);
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .form-section h3 i {
+        margin-right: 10px;
+        color: var(--primary-blue);
+    }
+    
+    .form-group {
+        margin-bottom: 25px;
+    }
+    
+    .form-label {
+        display: block;
+        color: var(--gray-dark);
+        font-weight: 500;
+        margin-bottom: 8px;
+        font-size: 0.95rem;
+    }
+    
+    .form-input {
+        width: 100%;
+        padding: 15px 20px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background-color: white;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+    
+    .form-input.error {
+        border-color: #ef4444;
+    }
+    
+    .input-group {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 15px;
+        align-items: end;
+    }
+    
+    .quantity-controls {
+        display: flex;
+        align-items: center;
+        background-color: var(--gray-light);
+        border-radius: 10px;
+        padding: 5px;
+        width: fit-content;
+    }
+    
+    .quantity-btn {
+        background: none;
+        border: none;
+        color: var(--primary-blue);
+        font-size: 1.2rem;
+        font-weight: 600;
+        padding: 8px 12px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .quantity-btn:hover {
+        background-color: var(--primary-blue);
+        color: white;
+    }
+    
+    .quantity-display {
+        padding: 8px 20px;
+        font-weight: 600;
+        color: var(--gray-dark);
+        min-width: 50px;
+        text-align: center;
+    }
+    
+    /* Order Summary */
+    .order-summary {
+        background: var(--gray-light);
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 30px;
+    }
+    
+    .summary-title {
+        color: var(--gray-dark);
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .summary-title i {
+        margin-right: 10px;
+        color: var(--primary-blue);
+    }
+    
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    .summary-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: var(--primary-blue);
+    }
+    
+    .summary-label {
+        color: var(--gray-medium);
+    }
+    
+    .summary-value {
+        color: var(--gray-dark);
+        font-weight: 500;
+    }
+    
+    /* Payment Button */
+    .payment-btn {
+        width: 100%;
+        background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
+        color: white;
+        border: none;
+        padding: 18px 30px;
+        border-radius: 12px;
+        font-size: 1.1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    
+    .payment-btn:hover {
+        background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+    }
+    
+    .payment-btn:active {
+        transform: translateY(0);
+    }
+    
+    /* Security Notice */
+    .security-notice {
+        background-color: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 10px;
+        padding: 20px;
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+    .security-notice i {
+        color: var(--primary-blue);
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+    }
+    
+    .security-notice p {
+        color: var(--gray-medium);
+        font-size: 0.9rem;
+        margin: 0;
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .checkout-layout {
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        
+        .product-details {
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        
+        .checkout-steps {
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .step:not(:last-child)::after {
+            display: none;
+        }
+        
+        .page-title {
+            font-size: 2rem;
+        }
+        
+        .input-group {
+            grid-template-columns: 1fr;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .checkout-container {
+            padding: 20px 15px;
+        }
+        
+        .product-card,
+        .payment-form {
+            padding: 20px;
+        }
+    }
+</style>
 
-<h2>Product Details</h2>
-<p>Product: {{ product.name }}</p>
-<p>Price: KSH {{ product.price }}</p>
-<p>Description: {{ product.description }}</p>
+<!-- Breadcrumb -->
+<div class="breadcrumb-nav">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="#"><i class="fas fa-home me-1"></i>Home</a></li>
+                <li class="breadcrumb-item"><a href="#">Products</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            </ol>
+        </nav>
+    </div>
+</div>
 
-<h2>Payment Details</h2>
-<form method="post">
-    {% csrf_token %}
+<div class="checkout-container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1 class="page-title">Secure Checkout</h1>
+        <p class="page-subtitle">Complete your purchase safely and securely</p>
+    </div>
     
-    <label>Phone Number (format: 0712345678):</label>
-    <input type="text" name="phone_number" required placeholder="0712345678">
-    <br><br>
+    <!-- Checkout Steps -->
+    <div class="checkout-steps">
+        <div class="step active">
+            <div class="step-number">1</div>
+            <span>Review Order</span>
+        </div>
+        <div class="step">
+            <div class="step-number">2</div>
+            <span>Payment</span>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <span>Confirmation</span>
+        </div>
+    </div>
     
-    <label>Quantity:</label>
-    <input type="number" name="quantity" value="1" min="1" required>
-    <br><br>
-    
-    <p>Total: KSH <span id="total">{{ product.price }}</span></p>
-    
-    <button type="submit">Pay with M-Pesa</button>
-</form>
+    <div class="checkout-layout">
+        <!-- Left Column - Product Details -->
+        <div class="checkout-left">
+            <div class="product-card">
+                <div class="product-details">
+                    <div class="product-image-container">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                        {% else %}
+                            <div class="product-placeholder">
+                                <i class="fas fa-image"></i>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="product-info">
+                        <h2>{{ product.name }}</h2>
+                        <div class="product-price">KSH {{ product.price|floatformat:0 }}</div>
+                        <p class="product-description">{{ product.description }}</p>
+                        
+                        <div class="product-features">
+                            <span class="feature-badge">
+                                <i class="fas fa-shield-alt me-1"></i>Secure Payment
+                            </span>
+                            <span class="feature-badge">
+                                <i class="fas fa-truck me-1"></i>Fast Delivery
+                            </span>
+                            <span class="feature-badge">
+                                <i class="fas fa-undo-alt me-1"></i>Easy Returns
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Right Column - Payment Form -->
+        <div class="checkout-right">
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h3 class="summary-title">
+                    <i class="fas fa-receipt"></i>Order Summary
+                </h3>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Product Price:</span>
+                    <span class="summary-value">KSH <span id="base-price">{{ product.price|floatformat:0 }}</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Quantity:</span>
+                    <span class="summary-value"><span id="summary-quantity">1</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Subtotal:</span>
+                    <span class="summary-value">KSH <span id="subtotal">{{ product.price|floatformat:0 }}</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Delivery Fee:</span>
+                    <span class="summary-value">KSH <span id="delivery-fee">200</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span class="summary-label">Total:</span>
+                    <span class="summary-value">KSH <span id="total">{{ product.price|add:200|floatformat:0 }}</span></span>
+                </div>
+            </div>
+            
+            <!-- Payment Form -->
+            <div class="payment-form">
+                <form method="post" id="checkout-form">
+                    {% csrf_token %}
+                    
+                    <div class="form-section">
+                        <h3><i class="fas fa-mobile-alt"></i>Payment Information</h3>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-phone me-1"></i>M-Pesa Phone Number
+                            </label>
+                            <input type="tel" name="phone_number" class="form-input" required 
+                                   placeholder="07XXXXXXXX" pattern="[0-9]{10}" 
+                                   title="Please enter a valid 10-digit phone number">
+                            <small style="color: var(--gray-medium); font-size: 0.85rem; margin-top: 5px; display: block;">
+                                Format: 0712345678 (10 digits)
+                            </small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-sort-numeric-up me-1"></i>Quantity
+                            </label>
+                            <div class="quantity-controls">
+                                <button type="button" class="quantity-btn" onclick="changeQuantity(-1)">−</button>
+                                <div class="quantity-display" id="quantity-display">1</div>
+                                <button type="button" class="quantity-btn" onclick="changeQuantity(1)">+</button>
+                            </div>
+                            <input type="hidden" name="quantity" id="quantity-input" value="1">
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="payment-btn">
+                        <i class="fas fa-credit-card"></i>
+                        <span>Pay with M-Pesa</span>
+                        <span>KSH <span id="button-total">{{ product.price|add:200|floatformat:0 }}</span></span>
+                    </button>
+                </form>
+                
+                <div class="security-notice">
+                    <i class="fas fa-lock"></i>
+                    <p>Your payment information is encrypted and secure. We use industry-standard SSL encryption to protect your data.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
-    // Simple JavaScript to calculate total
-    document.querySelector('input[name="quantity"]').addEventListener('input', function() {
-        const quantity = this.value;
-        const price = {{ product.price }};
-        const total = quantity * price;
-        document.getElementById('total').textContent = total.toFixed(2);
+    const basePrice = {{ product.price }};
+    const deliveryFee = 200;
+    let currentQuantity = 1;
+    
+    function changeQuantity(change) {
+        const newQuantity = currentQuantity + change;
+        if (newQuantity >= 1) {
+            currentQuantity = newQuantity;
+            updateDisplay();
+        }
+    }
+    
+    function updateDisplay() {
+        const subtotal = basePrice * currentQuantity;
+        const total = subtotal + deliveryFee;
+        
+        // Update quantity display
+        document.getElementById('quantity-display').textContent = currentQuantity;
+        document.getElementById('quantity-input').value = currentQuantity;
+        document.getElementById('summary-quantity').textContent = currentQuantity;
+        
+        // Update prices
+        document.getElementById('subtotal').textContent = subtotal.toFixed(0);
+        document.getElementById('total').textContent = total.toFixed(0);
+        document.getElementById('button-total').textContent = total.toFixed(0);
+    }
+    
+    // Form validation
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+        const phoneInput = document.querySelector('input[name="phone_number"]');
+        const phoneNumber = phoneInput.value.replace(/\s+/g, '');
+        
+        // Validate phone number format
+        if (!/^[0-9]{10}$/.test(phoneNumber)) {
+            e.preventDefault();
+            phoneInput.classList.add('error');
+            alert('Please enter a valid 10-digit phone number (e.g., 0712345678)');
+            return;
+        }
+        
+        // Remove error class if validation passes
+        phoneInput.classList.remove('error');
+        
+        // Show loading state
+        const submitBtn = document.querySelector('.payment-btn');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing Payment...';
+        submitBtn.disabled = true;
+        
+        // Re-enable button after 5 seconds (in case of errors)
+        setTimeout(() => {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }, 5000);
     });
+    
+    // Phone number formatting
+    document.querySelector('input[name="phone_number"]').addEventListener('input', function(e) {
+        // Remove any non-digit characters
+        let value = e.target.value.replace(/\D/g, '');
+        
+        // Limit to 10 digits
+        if (value.length > 10) {
+            value = value.substring(0, 10);
+        }
+        
+        e.target.value = value;
+        
+        // Remove error class when user starts typing
+        if (e.target.classList.contains('error')) {
+            e.target.classList.remove('error');
+        }
+    });
+    
+    // Initialize display
+    updateDisplay();
 </script>
 
 {% endblock %}
