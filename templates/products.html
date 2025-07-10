@@ -1,411 +1,10 @@
 <!-- templates/products.html -->
 {% extends 'base.html' %}
-
-{% block title %}EcomStore - Quality Products at Great Prices{% endblock %}
+{% load static %}
 
 {% block content %}
-<style>
-    /* Hero Section */
-    .hero-section {
-        background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
-        color: white;
-        padding: 80px 0;
-        margin-bottom: 60px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="rgba(255,255,255,0.1)"><polygon points="0,100 1000,0 1000,100"/></svg>') no-repeat center bottom;
-        background-size: cover;
-    }
-    
-    .hero-content {
-        position: relative;
-        z-index: 2;
-    }
-    
-    .hero-title {
-        font-size: 3.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-    }
-    
-    .hero-subtitle {
-        font-size: 1.3rem;
-        margin-bottom: 30px;
-        opacity: 0.9;
-    }
-    
-    .hero-btn {
-        background-color: white;
-        color: var(--primary-blue);
-        padding: 15px 30px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    }
-    
-    .hero-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
-        color: var(--primary-blue);
-    }
-    
-    /* Features Banner */
-    .features-banner {
-        background-color: var(--gray-light);
-        padding: 40px 0;
-        margin-bottom: 60px;
-    }
-    
-    .feature-item {
-        text-align: center;
-        padding: 20px;
-    }
-    
-    .feature-icon {
-        font-size: 3rem;
-        color: var(--primary-blue);
-        margin-bottom: 20px;
-    }
-    
-    .feature-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: var(--gray-dark);
-        margin-bottom: 10px;
-    }
-    
-    .feature-description {
-        color: var(--gray-medium);
-        line-height: 1.6;
-    }
-    
-    /* Products Section */
-    .products-section {
-        padding: 60px 0;
-    }
-    
-    .section-title {
-        text-align: center;
-        font-size: 2.5rem;
-        color: var(--gray-dark);
-        margin-bottom: 20px;
-        font-weight: 700;
-    }
-    
-    .section-subtitle {
-        text-align: center;
-        color: var(--gray-medium);
-        font-size: 1.2rem;
-        margin-bottom: 50px;
-    }
-    
-    /* Product Grid */
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 40px;
-        margin-top: 40px;
-    }
-    
-    /* Product Card */
-    .product-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    .product-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-    }
-    
-    /* Product Image */
-    .product-image-container {
-        position: relative;
-        overflow: hidden;
-        height: 250px;
-        background: var(--gray-light);
-    }
-    
-    .product-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-    
-    .product-card:hover .product-image {
-        transform: scale(1.05);
-    }
-    
-    .product-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background-color: var(--primary-blue);
-        color: white;
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-    }
-    
-    /* Product Info */
-    .product-info {
-        padding: 25px;
-    }
-    
-    .product-name {
-        font-size: 1.4rem;
-        color: var(--gray-dark);
-        margin-bottom: 12px;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-    
-    .product-description {
-        color: var(--gray-medium);
-        font-size: 0.95rem;
-        margin-bottom: 20px;
-        line-height: 1.6;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    
-    .product-price {
-        font-size: 1.5rem;
-        color: var(--primary-blue);
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
-    
-    .price-old {
-        font-size: 1.1rem;
-        color: var(--gray-medium);
-        text-decoration: line-through;
-        margin-left: 10px;
-        font-weight: 400;
-    }
-    
-    /* Product Actions */
-.product-actions {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-}
+ <link rel="stylesheet" href="{% static 'css/product_page.css' %}">
 
-.buy-btn {
-    flex: 1;
-    display: inline-block;
-    background: linear-gradient(135deg, var(--primary-blue), var(--light-blue));
-    color: white;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-    transition: all 0.2s ease;
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    line-height: 1.4;
-}
-
-.buy-btn:hover {
-    background: linear-gradient(135deg, var(--secondary-blue), var(--primary-blue));
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
-    color: white;
-}
-
-.login-btn {
-    flex: 1;
-    display: inline-block;
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    text-align: center;
-    transition: all 0.2s ease;
-    font-size: 14px;
-    line-height: 1.4;
-}
-
-.login-btn:hover {
-    background: linear-gradient(135deg, #059669, #047857);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-    color: white;
-}
-
-.wishlist-btn {
-    background: none;
-    border: 1.5px solid var(--primary-blue);
-    color: var(--primary-blue);
-    padding: 8px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.wishlist-btn:hover {
-    background-color: var(--primary-blue);
-    color: white;
-    transform: translateY(-1px);
-}
-    
-    /* Promotional Banner */
-    .promo-banner {
-        background: linear-gradient(135deg, #f59e0b, #d97706);
-        color: white;
-        padding: 60px 0;
-        margin: 80px 0;
-        text-align: center;
-    }
-    
-    .promo-title {
-        font-size: 2.5rem;
-        font-weight: 700;
-        margin-bottom: 20px;
-    }
-    
-    .promo-subtitle {
-        font-size: 1.3rem;
-        margin-bottom: 30px;
-        opacity: 0.9;
-    }
-    
-    .promo-btn {
-        background-color: white;
-        color: #d97706;
-        padding: 15px 30px;
-        border-radius: 50px;
-        text-decoration: none;
-        font-weight: 600;
-        font-size: 1.1rem;
-        transition: all 0.3s ease;
-    }
-    
-    .promo-btn:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        color: #d97706;
-    }
-    
-    /* Newsletter Section */
-    .newsletter-section {
-        background-color: var(--gray-dark);
-        color: white;
-        padding: 60px 0;
-        margin-top: 80px;
-    }
-    
-    .newsletter-title {
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: 15px;
-    }
-    
-    .newsletter-subtitle {
-        font-size: 1.1rem;
-        margin-bottom: 30px;
-        opacity: 0.9;
-    }
-    
-    .newsletter-form {
-        display: flex;
-        max-width: 500px;
-        margin: 0 auto;
-        gap: 10px;
-    }
-    
-    .newsletter-input {
-        flex: 1;
-        padding: 15px 20px;
-        border: none;
-        border-radius: 25px;
-        font-size: 1rem;
-    }
-    
-    .newsletter-btn {
-        background-color: var(--primary-blue);
-        color: white;
-        padding: 15px 30px;
-        border: none;
-        border-radius: 25px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-    
-    .newsletter-btn:hover {
-        background-color: var(--secondary-blue);
-    }
-    
-    /* Responsive Design */
-    @media (max-width: 768px) {
-        .hero-title {
-            font-size: 2.5rem;
-        }
-        
-        .hero-subtitle {
-            font-size: 1.1rem;
-        }
-        
-        .product-grid {
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-        }
-        
-        .newsletter-form {
-            flex-direction: column;
-        }
-        
-        .newsletter-input {
-            margin-bottom: 10px;
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .product-grid {
-            grid-template-columns: 1fr;
-        }
-        
-        .hero-section {
-            padding: 50px 0;
-        }
-        
-        .section-title {
-            font-size: 2rem;
-        }
-    }
-</style>
 
 <!-- Hero Section -->
 <section class="hero-section">
@@ -413,8 +12,8 @@
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <div class="hero-content">
-                    <h1 class="hero-title">Discover Amazing Products</h1>
-                    <p class="hero-subtitle">Shop the latest trends and find exactly what you're looking for with our curated collection of premium products.</p>
+                    <h1 class="hero-title">Premium Products, Exceptional Value</h1>
+                    <p class="hero-subtitle">Discover our curated collection of high-quality products designed to enhance your lifestyle. From cutting-edge technology to timeless essentials, we've got everything you need.</p>
                     <a href="#products" class="hero-btn">
                         <i class="fas fa-shopping-bag me-2"></i>Shop Now
                     </a>
@@ -422,7 +21,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="hero-image text-center">
-                    <i class="fas fa-shopping-cart" style="font-size: 15rem; opacity: 0.3;"></i>
+                    <img src="{% static 'images/hero.png'%}" alt="Shopping Illustration" class="img-fluid" style="border-radius: 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.1);">
                 </div>
             </div>
         </div>
@@ -433,40 +32,40 @@
 <section class="features-banner">
     <div class="container">
         <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-3 col-6">
                 <div class="feature-item">
                     <div class="feature-icon">
                         <i class="fas fa-shipping-fast"></i>
                     </div>
-                    <h3 class="feature-title">Free Shipping</h3>
-                    <p class="feature-description">Free delivery on orders over KSH 5,000</p>
+                    <h3 class="feature-title">Fast Shipping</h3>
+                    <p class="feature-description">Delivery within 2-3 business days on most items</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-6">
                 <div class="feature-item">
                     <div class="feature-icon">
                         <i class="fas fa-undo-alt"></i>
                     </div>
                     <h3 class="feature-title">Easy Returns</h3>
-                    <p class="feature-description">30-day hassle-free return policy</p>
+                    <p class="feature-description">30-day return policy, no questions asked</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-6">
                 <div class="feature-item">
                     <div class="feature-icon">
                         <i class="fas fa-lock"></i>
                     </div>
-                    <h3 class="feature-title">Secure Payment</h3>
-                    <p class="feature-description">100% secure checkout process</p>
+                    <h3 class="feature-title">Secure Checkout</h3>
+                    <p class="feature-description">256-bit SSL encryption for all transactions</p>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-3 col-6">
                 <div class="feature-item">
                     <div class="feature-icon">
                         <i class="fas fa-headset"></i>
                     </div>
-                    <h3 class="feature-title">24/7 Support</h3>
-                    <p class="feature-description">Round-the-clock customer support</p>
+                    <h3 class="feature-title">Dedicated Support</h3>
+                    <p class="feature-description">Our team is here to help 24/7</p>
                 </div>
             </div>
         </div>
@@ -476,37 +75,52 @@
 <!-- Products Section -->
 <section class="products-section" id="products">
     <div class="container">
-        <h2 class="section-title">Featured Products</h2>
-        <p class="section-subtitle">Discover our handpicked selection of premium products</p>
+        <h2 class="section-title">Our Collection</h2>
+        <p class="section-subtitle">Carefully selected products that combine quality, functionality, and style</p>
         
         <div class="product-grid">
             {% for product in products %}
                 <div class="product-card">
                     <div class="product-image-container">
-                        <a href="{% url 'checkout' product.id %}" style="display: block; height: 100%;">
-                            {% if product.image %}
-                                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image" style="object-fit: contain; background-color: #f8f9fa;">
-                            {% else %}
-                                <!-- Fallback image if no product image -->
-                                <div class="product-image" style="background: linear-gradient(135deg, #e2e8f0, #cbd5e1); display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 3rem;">
-                                    <i class="fas fa-image"></i>
-                                </div>
-                            {% endif %}
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                        {% else %}
+                            <div class="product-image" style="background: linear-gradient(135deg, #e2e8f0, #cbd5e1); display: flex; align-items: center; justify-content: center; color: #64748b; font-size: 3rem;">
+                                <i class="fas fa-box-open"></i>
+                            </div>
+                        {% endif %}
+                        {% if product.is_new %}
                             <div class="product-badge">New</div>
-                        </a>
+                        {% endif %}
+                        {% if product.discount %}
+                            <div class="product-badge discount-badge">{{ product.discount }}% OFF</div>
+                        {% endif %}
+                        <div class="quick-view-btn">Quick View</div>
                     </div>
                     
                     <div class="product-info">
                         <h3 class="product-name">{{ product.name }}</h3>
-                        <p class="product-description">{{ product.description }}</p>
-                        <div class="product-price">
-                            KSH {{ product.price|floatformat:0 }}
-                            {% comment %}
-                            <!-- Uncomment if you have original_price field -->
+                        <p class="product-description">{{ product.description|truncatechars:120 }}</p>
+                        
+                        <div class="product-rating">
+                            <div class="rating-stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="rating-count">(42)</span>
+                        </div>
+                        
+                        <div class="product-price-container">
+                            <span class="product-price">KSH {{ product.price|floatformat:0 }}</span>
                             {% if product.original_price %}
                                 <span class="price-old">KSH {{ product.original_price|floatformat:0 }}</span>
+                                {% if product.discount %}
+                                    <span class="price-discount">Save {{ product.discount }}%</span>
+                                {% endif %}
                             {% endif %}
-                            {% endcomment %}
                         </div>
                         
                         <div class="product-actions">
@@ -520,7 +134,7 @@
                                 </a>
                             {% endif %}
                             <button class="wishlist-btn" title="Add to Wishlist">
-                                <i class="fas fa-heart"></i>
+                                <i class="far fa-heart"></i>
                             </button>
                         </div>
                     </div>
@@ -530,7 +144,7 @@
                     <div style="padding: 60px 20px;">
                         <i class="fas fa-box-open" style="font-size: 4rem; color: #cbd5e1; margin-bottom: 20px;"></i>
                         <h3 style="color: #64748b; margin-bottom: 15px;">No Products Available</h3>
-                        <p style="color: #94a3b8;">Check back soon for new arrivals!</p>
+                        <p style="color: #94a3b8;">We're currently updating our inventory. Please check back soon!</p>
                     </div>
                 </div>
             {% endfor %}
@@ -538,92 +152,33 @@
     </div>
 </section>
 
-<style>
-    /* Updated Product Grid */
-    .product-grid {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 20px;
-        margin-top: 40px;
-    }
-    
-    /* Updated Product Card */
-    .product-card {
-        background: white;
-        border-radius: 15px;
-        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
-        overflow: hidden;
-        transition: all 0.3s ease;
-        border: 1px solid rgba(0, 0, 0, 0.05);
-    }
-    
-    /* Updated Product Image Container */
-    .product-image-container {
-        position: relative;
-        overflow: hidden;
-        height: 180px;
-        background: #f8f9fa;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .product-image {
-        max-width: 90%;
-        max-height: 90%;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-    }
-    
-    /* Responsive adjustments */
-    @media (max-width: 1200px) {
-        .product-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-    
-    @media (max-width: 992px) {
-        .product-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
-    }
-    
-    @media (max-width: 768px) {
-        .product-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .product-grid {
-            grid-template-columns: 1fr;
-        }
-    }
-</style>
-
-
 <!-- Promotional Banner -->
 <section class="promo-banner">
     <div class="container">
-        <h2 class="promo-title">Special Offer!</h2>
-        <p class="promo-subtitle">Get 20% off on your first order. Limited time offer!</p>
-        <a href="#products" class="promo-btn">
-            <i class="fas fa-tag me-2"></i>Shop Sale Items
-        </a>
+        <div class="promo-content">
+            <h2 class="promo-title">Summer Sale Event</h2>
+            <p class="promo-subtitle">Enjoy up to 30% off on selected items. Limited time offer - shop now before these deals are gone!</p>
+            <a href="#products" class="promo-btn">
+                <i class="fas fa-tag me-2"></i>View Offers
+            </a>
+        </div>
     </div>
 </section>
 
 <!-- Newsletter Section -->
 <section class="newsletter-section">
     <div class="container text-center">
-        <h2 class="newsletter-title">Stay Updated</h2>
-        <p class="newsletter-subtitle">Subscribe to our newsletter for the latest deals and updates</p>
-        <form class="newsletter-form">
-            <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
-            <button type="submit" class="newsletter-btn">
-                <i class="fas fa-paper-plane me-2"></i>Subscribe
-            </button>
-        </form>
+        <div class="newsletter-content">
+            <h2 class="newsletter-title">Join Our Community</h2>
+            <p class="newsletter-subtitle">Subscribe to receive exclusive offers, product updates, and insider tips.</p>
+            <form class="newsletter-form">
+                <input type="email" class="newsletter-input" placeholder="Enter your email address" required>
+                <button type="submit" class="newsletter-btn">
+                    <i class="fas fa-paper-plane me-2"></i>Subscribe
+                </button>
+            </form>
+            <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 15px;">We respect your privacy. Unsubscribe at any time.</p>
+        </div>
     </div>
 </section>
 
@@ -645,27 +200,109 @@
     // Wishlist functionality
     document.querySelectorAll('.wishlist-btn').forEach(btn => {
         btn.addEventListener('click', function() {
+            this.classList.toggle('active');
             const icon = this.querySelector('i');
-            if (icon.classList.contains('fas')) {
-                icon.classList.remove('fas');
-                icon.classList.add('far');
-                this.style.color = '#64748b';
+            icon.classList.toggle('far');
+            icon.classList.toggle('fas');
+            
+            // Simulate API call
+            const productCard = this.closest('.product-card');
+            const productName = productCard.querySelector('.product-name').textContent;
+            
+            if (this.classList.contains('active')) {
+                // Add to wishlist
+                Toastify({
+                    text: `Added ${productName} to your wishlist`,
+                    duration: 3000,
+                    close: true,
+                    gravity: "bottom",
+                    position: "right",
+                    backgroundColor: "var(--primary-blue)",
+                }).showToast();
             } else {
-                icon.classList.remove('far');
-                icon.classList.add('fas');
-                this.style.color = '#ef4444';
+                // Remove from wishlist
+                Toastify({
+                    text: `Removed ${productName} from your wishlist`,
+                    duration: 3000,
+                    close: true,
+                    gravity: "bottom",
+                    position: "right",
+                    backgroundColor: "#64748b",
+                }).showToast();
             }
+        });
+    });
+    
+    // Quick View functionality
+    document.querySelectorAll('.quick-view-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const productCard = this.closest('.product-card');
+            const productName = productCard.querySelector('.product-name').textContent;
+            
+            // In a real implementation, this would open a modal with product details
+            Toastify({
+                text: `Quick view: ${productName}`,
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#3b82f6",
+            }).showToast();
         });
     });
     
     // Newsletter form submission
     document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
         e.preventDefault();
-        const email = this.querySelector('.newsletter-input').value;
+        const emailInput = this.querySelector('.newsletter-input');
+        const email = emailInput.value;
+        
         if (email) {
-            alert('Thank you for subscribing! You will receive our latest updates.');
+            // Simulate successful subscription
+            Toastify({
+                text: "Thank you for subscribing!",
+                duration: 3000,
+                close: true,
+                gravity: "top",
+                position: "center",
+                backgroundColor: "#10b981",
+            }).showToast();
+            
+            // Reset form
             this.reset();
         }
+    });
+    
+    // Simulate product rating hover effect
+    document.querySelectorAll('.rating-stars').forEach(stars => {
+        stars.addEventListener('mouseover', function(e) {
+            if (e.target.classList.contains('fa-star') || e.target.classList.contains('fa-star-half-alt')) {
+                const allStars = this.querySelectorAll('i');
+                const hoveredStar = e.target;
+                let index = Array.from(allStars).indexOf(hoveredStar);
+                
+                allStars.forEach((star, i) => {
+                    if (i <= index) {
+                        star.classList.add('fas');
+                        star.classList.remove('far');
+                    }
+                });
+            }
+        });
+        
+        stars.addEventListener('mouseout', function() {
+            const allStars = this.querySelectorAll('i');
+            allStars.forEach((star, i) => {
+                // Reset to original 4.5 star rating
+                if (i < 4) {
+                    star.classList.add('fas');
+                    star.classList.remove('far');
+                } else if (i === 4) {
+                    star.classList.add('fas', 'fa-star-half-alt');
+                    star.classList.remove('far', 'fa-star');
+                }
+            });
+        });
     });
 </script>
 
