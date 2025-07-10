@@ -182,8 +182,19 @@ def checkout(request, product_id):
     
     return render(request, 'checkout.html', {'product': product})
 
+
+import json
+import datetime
+from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
+from django.core.exceptions import ObjectDoesNotExist
+
+@login_required
 def payment_status(request, order_id):
-    """Check payment status with debugging"""
+    """Check payment status with automatic timeout detection"""
     order = get_object_or_404(Order, id=order_id, user=request.user)
     
     print(f"=== PAYMENT STATUS CHECK ===")
@@ -192,7 +203,27 @@ def payment_status(request, order_id):
     print(f"Phone Number: {order.phone_number}")
     print(f"Total Amount: {order.total_amount}")
     
+    # Check if order should be marked as failed due to timeout
+    if order.status == 'pending':
+        # Check if order is older than 1 minutes (STK push timeout)
+        time_diff = timezone.now() - order.created_at
+        if time_diff.total_seconds() > 60:  # 1 minutes in seconds
+            print(f"Order timeout detected: {time_diff.total_seconds()} seconds")
+            order.status = 'failed'
+            order.save()
+            
+            # Also update transaction if it exists
+            try:
+                transaction = MpesaTransaction.objects.get(order=order)
+                if transaction.status == 'pending':
+                    transaction.status = 'failed'
+                    transaction.save()
+                    print("Transaction marked as failed due to timeout")
+            except MpesaTransaction.DoesNotExist:
+                pass
+    
     # Check if transaction exists
+    transaction = None
     try:
         transaction = MpesaTransaction.objects.get(order=order)
         print(f"Transaction Status: {transaction.status}")
@@ -202,7 +233,10 @@ def payment_status(request, order_id):
     except MpesaTransaction.DoesNotExist:
         print("No transaction record found!")
     
-    return render(request, 'payment_status.html', {'order': order})
+    return render(request, 'payment_status.html', {
+        'order': order,
+        'transaction': transaction
+    })
 
 @csrf_exempt
 def mpesa_callback(request):
@@ -272,9 +306,19 @@ def mpesa_callback(request):
                     
                     print("Transaction and order updated successfully!")
                     
-                else:  # Failed
-                    print(f"Payment failed with code: {result_code}")
+                else:  # Failed or Cancelled
+                    print(f"Payment failed/cancelled with code: {result_code}")
                     print(f"Failure reason: {result_desc}")
+                    
+                    # Check if it's a user cancellation
+                    if result_code == 1032:  # User cancelled
+                        print("User cancelled the transaction")
+                    elif result_code == 1037:  # User cannot be reached
+                        print("User cannot be reached")
+                    elif result_code == 1001:  # Insufficient funds
+                        print("Insufficient funds")
+                    elif result_code == 2001:  # Wrong PIN
+                        print("Wrong PIN entered")
                     
                     transaction.status = 'failed'
                     transaction.save()
@@ -294,6 +338,40 @@ def mpesa_callback(request):
             print(f"Traceback: {traceback.format_exc()}")
     
     return HttpResponse('OK')
+
+# Add this new view for AJAX status checking
+@login_required
+def check_payment_status(request, order_id):
+    """AJAX endpoint to check payment status"""
+    try:
+        order = get_object_or_404(Order, id=order_id, user=request.user)
+        
+        # Check for timeout
+        if order.status == 'pending':
+            time_diff = timezone.now() - order.created_at
+            if time_diff.total_seconds() > 300:  # 5 minutes timeout
+                order.status = 'failed'
+                order.save()
+                
+                # Update transaction
+                try:
+                    transaction = MpesaTransaction.objects.get(order=order)
+                    if transaction.status == 'pending':
+                        transaction.status = 'failed'
+                        transaction.save()
+                except MpesaTransaction.DoesNotExist:
+                    pass
+        
+        return JsonResponse({
+            'status': order.status,
+            'message': order.get_status_display(),
+            'order_id': order.id
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'error': str(e)
+        }, status=500)
 
 # Additional debugging function to test M-Pesa API connection
 def test_mpesa_connection():
