@@ -545,7 +545,7 @@
                                 <i class="fas fa-phone me-1"></i>M-Pesa Phone Number
                             </label>
                             <input type="tel" name="phone_number" class="form-input" required 
-                                   placeholder="07XXXXXXXX" pattern="[0-9]{10}" 
+                                   placeholder="07XXXXXXXX" 
                                    title="Please enter a valid 10-digit phone number">
                             <small style="color: var(--gray-medium); font-size: 0.85rem; margin-top: 5px; display: block;">
                                 Format: 0712345678 (10 digits)
@@ -609,52 +609,7 @@
         document.getElementById('button-total').textContent = total.toFixed(0);
     }
     
-    // Form validation
-    document.getElementById('checkout-form').addEventListener('submit', function(e) {
-        const phoneInput = document.querySelector('input[name="phone_number"]');
-        const phoneNumber = phoneInput.value.replace(/\s+/g, '');
-        
-        // Validate phone number format
-        if (!/^[0-9]{10}$/.test(phoneNumber)) {
-            e.preventDefault();
-            phoneInput.classList.add('error');
-            alert('Please enter a valid 10-digit phone number (e.g., 0712345678)');
-            return;
-        }
-        
-        // Remove error class if validation passes
-        phoneInput.classList.remove('error');
-        
-        // Show loading state
-        const submitBtn = document.querySelector('.payment-btn');
-        const originalText = submitBtn.innerHTML;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing Payment...';
-        submitBtn.disabled = true;
-        
-        // Re-enable button after 5 seconds (in case of errors)
-        setTimeout(() => {
-            submitBtn.innerHTML = originalText;
-            submitBtn.disabled = false;
-        }, 5000);
-    });
     
-    // Phone number formatting
-    document.querySelector('input[name="phone_number"]').addEventListener('input', function(e) {
-        // Remove any non-digit characters
-        let value = e.target.value.replace(/\D/g, '');
-        
-        // Limit to 10 digits
-        if (value.length > 10) {
-            value = value.substring(0, 10);
-        }
-        
-        e.target.value = value;
-        
-        // Remove error class when user starts typing
-        if (e.target.classList.contains('error')) {
-            e.target.classList.remove('error');
-        }
-    });
     
     // Initialize display
     updateDisplay();

@@ -29,6 +29,10 @@ INSTALLED_APPS = [
     'ecommerce',
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://8708c5e69a45.ngrok-free.app'
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -116,11 +120,12 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# M-Pesa Configuration
-MPESA_ENVIRONMENT = 'sandbox'  # Change to 'production' for live
-MPESA_CONSUMER_KEY = 'your_consumer_key'
-MPESA_CONSUMER_SECRET = 'your_consumer_secret'
-MPESA_SHORTCODE = '174379'  # Test shortcode for sandbox
-MPESA_PASSKEY = 'your_passkey'
-MPESA_CALLBACK_URL = 'https://yourdomain.com/mpesa/callback/'
+from decouple import config
+
+MPESA_ENVIRONMENT = config('MPESA_ENVIRONMENT')
+MPESA_CONSUMER_KEY = config('MPESA_CONSUMER_KEY')
+MPESA_CONSUMER_SECRET = config('MPESA_CONSUMER_SECRET')
+MPESA_SHORTCODE = config('MPESA_SHORTCODE')
+MPESA_PASSKEY = config('MPESA_PASSKEY')
+MPESA_CALLBACK_URL = config('MPESA_CALLBACK_URL')
 
