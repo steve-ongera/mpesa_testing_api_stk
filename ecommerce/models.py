@@ -43,6 +43,11 @@ class MpesaTransaction(models.Model):
         ('failed', 'Failed'),
     ]
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+
+    # Add these new fields for better callback tracking
+    callback_received_at = models.DateTimeField(null=True, blank=True)
+    failure_reason = models.CharField(max_length=500, null=True, blank=True)
+
     
     def __str__(self):
         return f"Transaction {self.checkout_request_id}"
